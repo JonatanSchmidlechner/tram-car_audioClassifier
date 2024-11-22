@@ -1,0 +1,40 @@
+# Store processed audiosaples here
+normalizedAudioSamples = [];
+
+# Read all audioFiles from a folder
+sampleFiles = folder.readFiles();
+
+# Normalize all audio samples (idk what to normalize tho) and store them in list
+for sampleFile in sampleFiles:
+    audioSample, fs = soundfile.read(sampleFile);
+    normalizeAudioSampple(audioSample);
+    audioSamples.append(audioSample);
+
+
+# Split to training and testing data
+train, test = normalizeAudioSamples.randomSplit(0.8);
+
+# Extract features from audio samples
+trainFeatures = [];
+for sample in train:
+    # Store features to a list
+    tempFeatures = [];
+    # Extract spectogram
+    spectogram = scipy.signal.spectrogram(sample);
+    spectogramMean = np.mean(spectogram);
+
+    # Extract some other stuff, idk what
+    ...
+    ...
+    trainFeatures.append(tempFeatures);
+
+
+# Train a model
+model = trainModel(trainFeatures);
+
+# Test the model
+model.test(test);
+
+# evaluate the model
+model.evaluate();
+    
