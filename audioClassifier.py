@@ -4,7 +4,6 @@ import numpy as np
 import sounddevice as sd
 import scipy.signal as signal
 import soundfile as sf
-from scipy.signal import resample
 
 def load_all_audio(folder_path: str):
 
@@ -26,7 +25,7 @@ def load_all_audio(folder_path: str):
             # Resample if sampling rate is not 16000 as it should already be.
             if sr != 16000:
                 num_samples = int(len(audio) * 16000 / sr)
-                audio = resample(audio, num_samples)
+                audio = signal.resample(audio, num_samples)
                 sr = 16000
 
             # Append the data as a dictionary
