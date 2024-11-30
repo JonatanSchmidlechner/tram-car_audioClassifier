@@ -3,6 +3,8 @@ import librosa
 import numpy as np
 import sounddevice as sd
 import scipy.signal as signal
+import soundfile as sf
+from scipy.signal import resample
 
 def load_all_audio(folder_path: str):
 
@@ -19,7 +21,13 @@ def load_all_audio(folder_path: str):
         # Try to load the file, error just in case
         try:
             # Load the audio file
-            audio, sr = librosa.load(file_path, sr=16000, mono=True)
+            audio, sr = sf.read(file_path)
+
+            # Resample if sampling rate is not 16000 as it should already be.
+            if sr != 16000:
+                num_samples = int(len(audio) * 16000 / sr)
+                audio = resample(audio, num_samples)
+                sr = 16000
 
             # Append the data as a dictionary
             audios.append({
