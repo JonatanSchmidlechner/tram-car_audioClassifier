@@ -60,7 +60,7 @@ def normalize_audio(audio: np.ndarray) -> np.ndarray:
     # Logarithmically scale audio
 
     # might be helpful or not
-    #logarithmic_scaling(audio)
+    #audio = logarithmic_scaling(audio)
 
     # Amplitude normalization by Peak Normalization. Normalized -1 to 1.
     audio = normalize_amplitude(audio)
@@ -176,11 +176,18 @@ def main():
     # Train the model
     clf: RandomForestClassifier = RandomForestClassifier(n_estimators=100)
     clf.fit(xTrain, yTrain)
+
+    # validate the model
+    # yValPred: np.ndarray = clf.predict(xVal)
+    # accuracy: float = accuracy_score(yVal, yValPred)
+    # print(f"Validation Accuracy: {accuracy}")
+    # print(classification_report(yVal, yValPred))
+
     # Test the model
-    yValPred: np.ndarray = clf.predict(xVal)
-    accuracy: float = accuracy_score(yVal, yValPred)
+    yTestPred: np.ndarray = clf.predict(xTest)
+    accuracy: float = accuracy_score(yTest, yTestPred)
     print(f"Accuracy: {accuracy}")
-    print(classification_report(yVal, yValPred))
+    print(classification_report(yTest, yTestPred))
 
     # Sort and plot feature importances
     featureImportances: np.ndarray = clf.feature_importances_
