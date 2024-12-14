@@ -187,7 +187,7 @@ def main():
     yTestPred: np.ndarray = clf.predict(xTest)
     accuracy: float = accuracy_score(yTest, yTestPred)
     print(f"Accuracy: {accuracy}")
-    print(classification_report(yTest, yTestPred))
+    print(classification_report(yTest, yTestPred, target_names=["Car", "Tram"]))
 
     # Sort and plot feature importances
     featureImportances: np.ndarray = clf.feature_importances_
