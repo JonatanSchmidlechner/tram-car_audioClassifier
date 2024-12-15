@@ -161,20 +161,20 @@ def main():
 
 
     # Do the same steps for validation data
-    carAudioVal: np.ndarray
-    carLabelsVal: np.ndarray
-    carAudioVal, carLabelsVal = load_all_audio("carVal", 0)
 
-    tramAudioVal: np.ndarray
-    tram_labelsVal: np.ndarray
-    tramAudioVal, tram_labelsVal = load_all_audio("tramVal", 1)
+    # carAudioVal: np.ndarray
+    # carLabelsVal: np.ndarray
+    # carAudioVal, carLabelsVal = load_all_audio("carVal", 0)
 
-    carAudioVal: np.ndarray = normalize_audio(carAudioVal)
-    tramAudioVal: np.ndarray = normalize_audio(tramAudioVal)
-    audioSamplesVal: np.ndarray = np.concatenate((carAudioVal, tramAudioVal), axis=0)
-    yVal: np.ndarray = np.concatenate((carLabelsVal, tram_labelsVal), axis=0)
+    # tramAudioVal: np.ndarray
+    # tram_labelsVal: np.ndarray
+    # tramAudioVal, tram_labelsVal = load_all_audio("tramVal", 1)
 
-    xVal: np.ndarray = extract_features(audioSamplesVal)
+    # carAudioVal: np.ndarray = normalize_audio(carAudioVal)
+    # tramAudioVal: np.ndarray = normalize_audio(tramAudioVal)
+    # audioSamplesVal: np.ndarray = np.concatenate((carAudioVal, tramAudioVal), axis=0)
+    # yVal: np.ndarray = np.concatenate((carLabelsVal, tram_labelsVal), axis=0)
+    # xVal: np.ndarray = extract_features(audioSamplesVal)
 
 
     # Do the same steps for test data
@@ -190,7 +190,6 @@ def main():
     tramAudioTest: np.ndarray = normalize_audio(tramAudioTest)
     audioSamplesTest: np.ndarray = np.concatenate((carAudioTest, tramAudioTest), axis=0)
     yTest: np.ndarray = np.concatenate((carLabelsTest, tram_labelsTest), axis=0)
-
     xTest: np.ndarray = extract_features(audioSamplesTest)
 
 
@@ -220,17 +219,6 @@ def main():
     accuracy: float = accuracy_score(yTest, yTestPred)
     print(f"Accuracy: {accuracy}")
     print(classification_report(yTest, yTestPred, target_names=["Car", "Tram"]))
-
-    # Sort and plot feature importances
-    featureImportances: np.ndarray = clf.feature_importances_
-    sortedIndices: np.ndarray = np.argsort(featureImportances)[::-1]
-    plt.figure(figsize=(10, 6))
-    plt.title("Feature Importances")
-    plt.bar(range(len(featureImportances)), featureImportances[sortedIndices], align="center")
-    plt.xticks(range(len(featureImportances)), sortedIndices)
-    plt.xlabel("Feature Index")
-    plt.ylabel("Importance")
-    plt.show()
 
 if __name__ == '__main__':
     main()
