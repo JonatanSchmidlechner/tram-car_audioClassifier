@@ -52,15 +52,10 @@ def normalize_audio(audio: np.ndarray) -> np.ndarray:
     # Frequency normalization. Removing irrelevant frequencies using bandpass filter.
     # Input the frequency range you want.
 
-    # values must be 0 < x < 8000. Might want to mess with these when testing learning.
+    # values must be 0 < x < 8000.
     audio = normalize_frequency(audio, 10, 7999)
     # Samples need to have a fixed duration for ML classifier model.
     audio = normalize_duration(audio, FIXED_DURATION, NORMALIZED_SAMPLINGRATE)
-
-    # Logarithmically scale audio
-
-    # might be helpful or not
-    #audio = logarithmic_scaling(audio)
 
     # Amplitude normalization by Peak Normalization. Normalized -1 to 1.
     audio = normalize_amplitude(audio)
@@ -106,15 +101,6 @@ def normalize_duration(audio: np.ndarray, fixedDuration: float=FIXED_DURATION,
         else:
             padding = np.zeros(numSamples - len(audioData["audio"]))
             audioData["audio"] = np.concatenate([audioData["audio"], padding])
-    return audio
-
-def logarithmic_scaling(audio: np.ndarray, epsilon: float=1e-16) -> np.ndarray:
-
-    # Logarithmically scale audio. Add Epsilon in case of 0s.
-    audioData: dict
-    for audioData in audio:
-        audioData["audio"] = np.sign(audioData["audio"]) * np.log(np.abs(audioData["audio"]) + epsilon)
-
     return audio
 
 def extract_features(audio: np.ndarray) -> np.ndarray:
