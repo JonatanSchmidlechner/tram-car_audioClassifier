@@ -140,8 +140,8 @@ def extract_features(audio: np.ndarray) -> np.ndarray:
     return np.array(scaledFeatures)
 
 def main():
-    # Load audio data
-    # For the sake of efficiency audio has been normalized to 16kHz mono sound in advance.
+    # Load training data
+    # For the sake of efficiency audio has been converted to .wav mono sound in advance.
     # This way it does not need to be done every time the program is tested and takes a lot less disk space.
     carAudio: np.ndarray
     carLabels: np.ndarray
@@ -155,23 +155,55 @@ def main():
     carAudio: np.ndarray = normalize_audio(carAudio)
     tramAudio: np.ndarray = normalize_audio(tramAudio)
     audioSamples: np.ndarray = np.concatenate((carAudio, tramAudio), axis=0)
-    audioLabels: np.ndarray = np.concatenate((carLabels, tram_labels), axis=0)
+    yTrain: np.ndarray = np.concatenate((carLabels, tram_labels), axis=0)
     # Extract features from audio samples.
-    features: np.ndarray = extract_features(audioSamples)
+    xTrain: np.ndarray = extract_features(audioSamples)
 
-    # Split data to train, validation and test sets.
-    xTrain: np.ndarray
-    yTrain: np.ndarray
-    xValTest: np.ndarray
-    yValTest: np.ndarray
-    xVal: np.ndarray
-    yVal: np.ndarray
-    xTest: np.ndarray
-    yTest: np.ndarray
-    # Extract train data.
-    xTrain, xValTest, yTrain, yValTest = train_test_split(features, audioLabels, test_size=0.4, random_state=42)
+
+    # Do the same steps for validation data
+    carAudioVal: np.ndarray
+    carLabelsVal: np.ndarray
+    carAudioVal, carLabelsVal = load_all_audio("carVal", 0)
+
+    tramAudioVal: np.ndarray
+    tram_labelsVal: np.ndarray
+    tramAudioVal, tram_labelsVal = load_all_audio("tramVal", 1)
+
+    carAudioVal: np.ndarray = normalize_audio(carAudioVal)
+    tramAudioVal: np.ndarray = normalize_audio(tramAudioVal)
+    audioSamplesVal: np.ndarray = np.concatenate((carAudioVal, tramAudioVal), axis=0)
+    yVal: np.ndarray = np.concatenate((carLabelsVal, tram_labelsVal), axis=0)
+
+    xVal: np.ndarray = extract_features(audioSamplesVal)
+
+
+    # Do the same steps for test data
+    carAudioTest: np.ndarray
+    carLabelsTest: np.ndarray
+    carAudioTest, carLabelsTest = load_all_audio("carTest", 0)
+
+    tramAudioTest: np.ndarray
+    tram_labelsTest: np.ndarray
+    tramAudioTest, tram_labelsTest = load_all_audio("tramTest", 1)
+
+    carAudioTest: np.ndarray = normalize_audio(carAudioTest)
+    tramAudioTest: np.ndarray = normalize_audio(tramAudioTest)
+    audioSamplesTest: np.ndarray = np.concatenate((carAudioTest, tramAudioTest), axis=0)
+    yTest: np.ndarray = np.concatenate((carLabelsTest, tram_labelsTest), axis=0)
+
+    xTest: np.ndarray = extract_features(audioSamplesTest)
+
+
+
+    # Testing with larger amount of signals.
+    # Gave interesting results, but it was said that our own data should preferably be validation and test data.
+    # xValTest: np.ndarray
+    # yValTest: np.ndarray
+    # xTrain, xValTest, yTrain, yValTest = train_test_split(xTrain, yTrain, test_size=0.4, random_state=42)
     # Extract validation and test data. Validation data is used for tuning the model.
-    xVal, xTest, yVal, yTest = train_test_split(xValTest, yValTest, test_size=0.5, random_state=42)
+    # xVal, xTest, yVal, yTest = train_test_split(xValTest, yValTest, test_size=0.5, random_state=42)
+
+
 
     # Train the model
     clf: RandomForestClassifier = RandomForestClassifier(n_estimators=100)
