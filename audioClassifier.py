@@ -145,8 +145,26 @@ def main():
     # Extract features from audio samples.
     xTrain: np.ndarray = extract_features(audioSamples)
 
+    # Do the same steps (load, normalization and feature extraction) for test data
+    carAudioTest: np.ndarray
+    carLabelsTest: np.ndarray
+    carAudioTest, carLabelsTest = load_all_audio("carTest", 0)
 
-    # Do the same steps for validation data
+    tramAudioTest: np.ndarray
+    tram_labelsTest: np.ndarray
+    tramAudioTest, tram_labelsTest = load_all_audio("tramTest", 1)
+
+    carAudioTest: np.ndarray = normalize_audio(carAudioTest)
+    tramAudioTest: np.ndarray = normalize_audio(tramAudioTest)
+    audioSamplesTest: np.ndarray = np.concatenate((carAudioTest, tramAudioTest), axis=0)
+    yTest: np.ndarray = np.concatenate((carLabelsTest, tram_labelsTest), axis=0)
+    xTest: np.ndarray = extract_features(audioSamplesTest)
+
+    # Train the model
+    clf: RandomForestClassifier = RandomForestClassifier(n_estimators=100)
+    clf.fit(xTrain, yTrain)
+
+    # Code used to validate the model:
 
     # carAudioVal: np.ndarray
     # carLabelsVal: np.ndarray
@@ -162,39 +180,6 @@ def main():
     # yVal: np.ndarray = np.concatenate((carLabelsVal, tram_labelsVal), axis=0)
     # xVal: np.ndarray = extract_features(audioSamplesVal)
 
-
-    # Do the same steps for test data
-    carAudioTest: np.ndarray
-    carLabelsTest: np.ndarray
-    carAudioTest, carLabelsTest = load_all_audio("carTest", 0)
-
-    tramAudioTest: np.ndarray
-    tram_labelsTest: np.ndarray
-    tramAudioTest, tram_labelsTest = load_all_audio("tramTest", 1)
-
-    carAudioTest: np.ndarray = normalize_audio(carAudioTest)
-    tramAudioTest: np.ndarray = normalize_audio(tramAudioTest)
-    audioSamplesTest: np.ndarray = np.concatenate((carAudioTest, tramAudioTest), axis=0)
-    yTest: np.ndarray = np.concatenate((carLabelsTest, tram_labelsTest), axis=0)
-    xTest: np.ndarray = extract_features(audioSamplesTest)
-
-
-
-    # Testing with larger amount of signals.
-    # Gave interesting results, but it was said that our own data should preferably be validation and test data.
-    # xValTest: np.ndarray
-    # yValTest: np.ndarray
-    # xTrain, xValTest, yTrain, yValTest = train_test_split(xTrain, yTrain, test_size=0.4, random_state=42)
-    # Extract validation and test data. Validation data is used for tuning the model.
-    # xVal, xTest, yVal, yTest = train_test_split(xValTest, yValTest, test_size=0.5, random_state=42)
-
-
-
-    # Train the model
-    clf: RandomForestClassifier = RandomForestClassifier(n_estimators=100)
-    clf.fit(xTrain, yTrain)
-
-    # validate the model
     # yValPred: np.ndarray = clf.predict(xVal)
     # accuracy: float = accuracy_score(yVal, yValPred)
     # print(f"Validation Accuracy: {accuracy}")
