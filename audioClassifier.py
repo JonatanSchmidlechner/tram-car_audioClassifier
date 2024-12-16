@@ -130,11 +130,11 @@ def main():
     # This way it does not need to be done every time the program is tested and takes a lot less disk space.
     carAudio: np.ndarray
     carLabels: np.ndarray
-    carAudio, carLabels = load_all_audio("carSamples", 0)
+    carAudio, carLabels = load_all_audio("carTrain", 0)
 
     tramAudio: np.ndarray
     tram_labels: np.ndarray
-    tramAudio, tram_labels = load_all_audio("tramSamples", 1)
+    tramAudio, tram_labels = load_all_audio("tramTrain", 1)
 
     # Normalize audio signals.
     carAudio: np.ndarray = normalize_audio(carAudio)
@@ -189,6 +189,7 @@ def main():
     accuracy: float = accuracy_score(yTest, yTestPred)
     print(f"Accuracy: {accuracy}")
     print(classification_report(yTest, yTestPred, target_names=["Car", "Tram"]))
+
 
 if __name__ == '__main__':
     main()
